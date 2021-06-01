@@ -125,6 +125,7 @@ def get_args():
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     # set your environment
+    parser.add_argument('--path',type=str,default='./')
     parser.add_argument('--gpu', type=str, default = '0')
     parser.add_argument('--n_workers', type =int , default = 4 , help = "The number of workers for dataloader")
 
@@ -183,9 +184,9 @@ def main():
 
 
     # set Dataset and DataLoader
-    train_dataset = LungSegDataset(transforms=train_transforms)
-    val_dataset = LungSegDataset(split='val',transforms=eval_transforms)
-    test_dataset = LungSegDataset(split = 'test',transforms=eval_transforms)
+    train_dataset = LungSegDataset(root_dir = arg.path,transforms=train_transforms)
+    val_dataset = LungSegDataset(root_dir = arg.path,split='val',transforms=eval_transforms)
+    test_dataset = LungSegDataset(root_dir = arg.path,split = 'test',transforms=eval_transforms)
 
     from torch.utils.data import DataLoader
     dataloader = {'train' : DataLoader(dataset = train_dataset, batch_size=args.batch_size, num_workers=args.n_workers, shuffle=True),
