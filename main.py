@@ -184,9 +184,9 @@ def main():
 
 
     # set Dataset and DataLoader
-    train_dataset = LungSegDataset(root_dir = arg.path,transforms=train_transforms)
-    val_dataset = LungSegDataset(root_dir = arg.path,split='val',transforms=eval_transforms)
-    test_dataset = LungSegDataset(root_dir = arg.path,split = 'test',transforms=eval_transforms)
+    train_dataset = LungSegDataset(root_dir = args.path,transforms=train_transforms)
+    val_dataset = LungSegDataset(root_dir = args.path,split='val',transforms=eval_transforms)
+    test_dataset = LungSegDataset(root_dir = args.path,split = 'test',transforms=eval_transforms)
 
     from torch.utils.data import DataLoader
     dataloader = {'train' : DataLoader(dataset = train_dataset, batch_size=args.batch_size, num_workers=args.n_workers, shuffle=True),
