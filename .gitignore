@@ -1,8 +1,13 @@
 data
 u-net
 
-.idea
+/.idea/
 .idea/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+
+/__pycache__/
+/accuracy_plot.png
+/loss_plot.png
+/checkpoint/

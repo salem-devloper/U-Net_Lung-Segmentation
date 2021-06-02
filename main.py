@@ -3,12 +3,13 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
-from tqdm import tqdm
 from CovidCTDataset import CovidCTDataset
 import argparse
 import logging
 import os
 import sys
+
+import matplotlib.pyplot as plt
 
 from torch import optim
 from tqdm import tqdm
@@ -35,7 +36,7 @@ def train_and_validate(net,criterion, optimizer, scheduler, dataloader,device,ep
     history = {'train':{'epoch':[], 'loss' : [] , 'acc':[]},
                'val'  :{'epoch':[], 'loss' : [] , 'acc':[]}}
 
-    best_acc = 0.98
+    best_acc = 0.92
     best_loss = 10000000000
     start = time.time()
     for epoch in range(epochs):
@@ -94,7 +95,7 @@ def train_and_validate(net,criterion, optimizer, scheduler, dataloader,device,ep
                     # print(f'Batch {batch_idx+1}/{len(dataloader[phase])} Loss {loss.item()}')
 
                 data_iter.set_description(
-                    f' {phase.capitalize()} - Loss: {running_loss:1.4f} Acc: {running_acc:1.4f}')
+                    f' {phase.capitalize()} - Loss: {running_loss/dataset_size:1.4f} Acc: {running_acc:1.4f}')
 
 
             """ statistics """
@@ -124,7 +125,82 @@ def train_and_validate(net,criterion, optimizer, scheduler, dataloader,device,ep
 
         time_elapsed = time.time() - start
         min, sec = time_elapsed//60 , time_elapsed % 60
+
+
+        # import json
+
+        # with open('history.json', 'w') as fp:
+        #     json.dump(history, fp)
+
         print("Total Training time {:.0f}min {:.0f}sec".format(min,sec))
+    draw_plots(history)
+
+def test(net,criterion,dataloader,device):
+    running_loss = 0.0
+    running_correct = 0
+    dataset_size = 0
+    """Iterate over data"""
+    data_iter = tqdm(enumerate(dataloader['test']), total=len(dataloader['test']))
+    for batch_idx, sample in data_iter:
+        imgs, true_masks = sample['image'], sample['mask']
+        imgs = imgs.to(device=device, dtype=torch.float32)
+        # mask_type = torch.float32 if net.n_classes == 1 else torch.long
+        mask_type = torch.float32
+        true_masks = true_masks.to(device=device, dtype=mask_type)
+
+        # zero the parameter gradients
+        # optimizer.zero_grad()
+
+        """forward"""
+        with torch.set_grad_enabled(False):
+            masks_pred = net(imgs)
+            loss = criterion(masks_pred, true_masks)
+            running_loss += loss.item()
+
+        """ statistics """
+        dataset_size += imgs.size(0)
+        running_loss += loss.item() * imgs.size(0)
+        pred = torch.sigmoid(masks_pred) > 0.5
+        running_correct += (pred == true_masks).float().mean().item() * imgs.size(0)
+        running_acc = running_correct / dataset_size
+        # if (batch_idx + 1) % 40 == 0:
+        # print(f'Batch {batch_idx}/{len(dataloader[phase])} Loss {loss.item()} Acc {running_acc}')
+        # print(f'Batch {batch_idx+1}/{len(dataloader[phase])} Loss {loss.item()}')
+
+        data_iter.set_description(
+            f' Test: - Loss: {running_loss / dataset_size:1.4f} Acc: {running_acc:1.4f}')
+    """ statistics """
+    epoch_loss = running_loss / dataset_size
+    epoch_acc = running_correct / dataset_size
+    print('Test Loss {:.5f}\nTest Acc {:.2f}'
+          .format(epoch_loss, epoch_acc))
+
+
+def draw_plots(history):
+    # list all data in history
+    #history = {'train': {'epoch': [], 'loss': [], 'acc': []},
+    #           'val': {'epoch': [], 'loss': [], 'acc': []}}
+    #print(history.history.keys())
+    # summarize history for accuracy
+    plt.plot(history['train']['acc'])
+    plt.plot(history['val']['acc'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.savefig('./accuracy_plot.png')
+    plt.show()
+
+    # summarize history for loss
+    plt.plot(history['train']['loss'])
+    plt.plot(history['val']['loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.savefig('./loss_plot.png')
+    plt.show()
+
 
 def get_args():
 
@@ -138,9 +214,9 @@ def get_args():
 
     # arguments for training
     parser.add_argument('--img_size', type = int , default = 512)
-    parser.add_argument('--epochs', type=int , default=30)
-    parser.add_argument('--batch_size', type=int, default=4)
-    parser.add_argument('--lr', type=float, default=0.001)
+    parser.add_argument('--epochs', type=int , default=50)
+    parser.add_argument('--batch_size', type=int, default=8)
+    parser.add_argument('--lr', type=float, default=0.00001)
 
     parser.add_argument('--load_model', type=str, default=None, help='.pth file path to load model')
     return parser.parse_args()
@@ -193,7 +269,7 @@ def main():
     img_list = shuffle(os.listdir(img_path),random_state=42)
 
     # ToDo : Removing in the real training
-    img_list = img_list[:1000]
+    # img_list = img_list[:1000]
 
     train_split,test_split = train_test_split(img_list, test_size=0.25, random_state=42)
     train_split,valid_split = train_test_split(train_split, test_size=0.15, random_state=42)
@@ -233,7 +309,7 @@ def main():
     criterion = nn.BCEWithLogitsLoss()
 
     train_and_validate(net=model,criterion=criterion,optimizer=optimizer,dataloader=dataloader,device=device,epochs=args.epochs, scheduler=scheduler,load_model=checkpoint_path)
-    # test()
+    test(net=model,criterion=criterion,dataloader=dataloader,device=device)
 
 if __name__ == '__main__':
     main()
