@@ -1,2 +1,6 @@
 data
 u-net
+
+model
+.idea
+__pycache__
