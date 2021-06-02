@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import numpy as np
 import torch
 import torch.nn as nn
@@ -15,6 +16,7 @@ from model.unet import UNet
 import time
 import copy
 from sklearn.model_selection import train_test_split
+from sklearn.utils import shuffle
 
 def train_and_validate(net,criterion, optimizer, scheduler, dataloader,device,epochs, load_model = None):
 
@@ -57,7 +59,8 @@ def train_and_validate(net,criterion, optimizer, scheduler, dataloader,device,ep
             running_correct = 0
             dataset_size = 0
             """Iterate over data"""
-            for batch_idx, sample in enumerate(dataloader[phase]):
+            data_iter = tqdm(enumerate(dataloader[phase]), total=len(dataloader[phase]))
+            for batch_idx, sample in data_iter:
                 imgs , true_masks = sample['image'],sample['mask']
                 imgs = imgs.to(device=device, dtype=torch.float32)
                 # mask_type = torch.float32 if net.n_classes == 1 else torch.long
@@ -89,6 +92,9 @@ def train_and_validate(net,criterion, optimizer, scheduler, dataloader,device,ep
                 # if (batch_idx + 1) % 40 == 0:
                     # print(f'Batch {batch_idx}/{len(dataloader[phase])} Loss {loss.item()} Acc {running_acc}')
                     # print(f'Batch {batch_idx+1}/{len(dataloader[phase])} Loss {loss.item()}')
+
+                data_iter.set_description(
+                    f' {phase.capitalize()} - Loss: {running_loss:1.4f} Acc: {running_acc:1.4f}')
 
 
             """ statistics """
@@ -126,15 +132,15 @@ def get_args():
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     # set your environment
-    parser.add_argument('--path',type=str,default='./')
+    parser.add_argument('--path',type=str,default='./data/')
     parser.add_argument('--gpu', type=str, default = '0')
-    parser.add_argument('--n_workers', type =int , default = 4 , help = "The number of workers for dataloader")
+    parser.add_argument('--n_workers', type =int , default = 0 , help = "The number of workers for dataloader")
 
     # arguments for training
-    parser.add_argument('--img_size', type = int , default = 512,)
-    parser.add_argument('--epochs', type=int , default = 100 )
-    parser.add_argument('--batch_size', type=int, default=2)
-    parser.add_argument('--lr', type=float, default=0.1)
+    parser.add_argument('--img_size', type = int , default = 512)
+    parser.add_argument('--epochs', type=int , default=10)
+    parser.add_argument('--batch_size', type=int, default=4)
+    parser.add_argument('--lr', type=float, default=0.001)
 
     parser.add_argument('--load_model', type=str, default=None, help='.pth file path to load model')
     return parser.parse_args()
@@ -157,7 +163,6 @@ def main():
     """
 
     img_size = args.img_size #default: 512
-
 
 
     # set transforms for dataset
@@ -185,9 +190,14 @@ def main():
 
     # split data to train_valid_test
     img_path = os.path.join(args.path,'images')
-    img_list = os.listdir(img_path)
+    img_list = shuffle(os.listdir(img_path),random_state=42)
+
+    # ToDo : Removing in the real training
+    img_list = img_list[:1000]
+
     train_split,test_split = train_test_split(img_list, test_size=0.25, random_state=42)
     train_split,valid_split = train_test_split(train_split, test_size=0.15, random_state=42)
+
     # set Dataset and DataLoader
     train_dataset = CovidCTDataset(root_dir = args.path,transforms=train_transforms,split=train_split)
     val_dataset = CovidCTDataset(root_dir = args.path,split=valid_split,transforms=eval_transforms)
