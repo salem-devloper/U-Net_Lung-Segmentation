@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
 from tqdm import tqdm
-from LungSegmentationDataset import LungSegDataset
+from CovidCTDataset import CovidCTDataset
 import argparse
 import logging
 import os
@@ -14,6 +14,7 @@ from tqdm import tqdm
 from model.unet import UNet
 import time
 import copy
+from sklearn.model_selection import train_test_split
 
 def train_and_validate(net,criterion, optimizer, scheduler, dataloader,device,epochs, load_model = None):
 
@@ -182,11 +183,15 @@ def main():
         ToTensor()
     ])
 
-
+    # split data to train_valid_test
+    img_path = os.path.join(args.path,'images')
+    img_list = os.listdir(img_path)
+    train_split,test_split = train_test_split(img_list, test_size=0.25, random_state=42)
+    train_split,valid_split = train_test_split(train_split, test_size=0.15, random_state=42)
     # set Dataset and DataLoader
-    train_dataset = LungSegDataset(root_dir = args.path,transforms=train_transforms)
-    val_dataset = LungSegDataset(root_dir = args.path,split='val',transforms=eval_transforms)
-    test_dataset = LungSegDataset(root_dir = args.path,split = 'test',transforms=eval_transforms)
+    train_dataset = CovidCTDataset(root_dir = args.path,transforms=train_transforms,split=train_split)
+    val_dataset = CovidCTDataset(root_dir = args.path,split=valid_split,transforms=eval_transforms)
+    test_dataset = CovidCTDataset(root_dir = args.path,split = test_split,transforms=eval_transforms)
 
     from torch.utils.data import DataLoader
     dataloader = {'train' : DataLoader(dataset = train_dataset, batch_size=args.batch_size, num_workers=args.n_workers, shuffle=True),
