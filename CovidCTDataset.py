@@ -89,7 +89,7 @@ class CovidCTDataset(Dataset): # inherit from torch.utils.data.Dataset
         #    file_idx = int(fName.split('_')[1])
         #    if idx == file_idx:
         #        mask_fName = fName
-        mask_path = os.path.join(self.mask_path, img_path)
+        mask_path = os.path.join(self.mask_path, img_name)
         mask = Image.open(mask_path)  # PIL Image
         # mask = cv2.imread(mask_path)
 
