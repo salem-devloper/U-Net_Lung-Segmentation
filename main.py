@@ -138,7 +138,7 @@ def get_args():
 
     # arguments for training
     parser.add_argument('--img_size', type = int , default = 512)
-    parser.add_argument('--epochs', type=int , default=10)
+    parser.add_argument('--epochs', type=int , default=30)
     parser.add_argument('--batch_size', type=int, default=4)
     parser.add_argument('--lr', type=float, default=0.001)
 
