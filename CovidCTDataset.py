@@ -13,7 +13,7 @@ from skimage import io
 # torch.utils.data.Dataset is an abstract class representing a dataset
 class CovidCTDataset(Dataset): # inherit from torch.utils.data.Dataset
     "Lung sengmentation dataset."
-    def __init__(self,root_dir = os.path.join(os.getcwd(),"data/Lung Segmentation"),split, transforms = None , shuffle = True):
+    def __init__(self,root_dir = os.path.join(os.getcwd(),"data/Lung Segmentation"),split=None, transforms = None , shuffle = True):
         """
         Args:
         :param root_dir (str):
