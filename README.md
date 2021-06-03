@@ -1,4 +1,4 @@
-# QaTa-Covid-Segmentation
+# QaTa-Cov19-Segmentation
 Application of U-Net in Covid 19 Segmentation<br>
 This Implementation Achived **95% accuracy** in chest x-ray Covid19 Segmentation with U-Net
 ![QataSeg](./Figure_1.png)
