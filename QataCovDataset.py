@@ -49,7 +49,7 @@ class QataCovDataset(Dataset): # inherit from torch.utils.data.Dataset
         #    if idx == file_idx:
         #        mask_fName = fName
         mask_path = os.path.join(self.mask_path, 'mask_'+img_name)
-        if os.path.exist():
+        if os.path.exists():
             mask = Image.open(mask_path)  # PIL Image
         else:
             mask = Image.fromarray(np.zeros(img.shape,dtype=np.uint8))
