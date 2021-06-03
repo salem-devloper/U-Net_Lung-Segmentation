@@ -1,16 +1,16 @@
-# U-Net_Lung-Segmentation
-Application of U-Net in Lung Segmentation<br>
-This Implementation Achived **97% accuracy** in Lung Segmentation with U-Net
-![LungSeg](./Figure_1.png)
+# Qata-Covid-Segmentation
+Application of U-Net in Covid 19 Segmentation<br>
+This Implementation Achived **95% accuracy** in chest x-ray Covid19 Segmentation with U-Net
+![QataSeg](./Figure_1.png)
 <br>
 # Dataset
-Download Dataset from [Chest Xray Masks and Labels Pulmonary Chest X-Ray Defect Detection](https://www.kaggle.com/nikhilpandey360/chest-xray-masks-and-labels)
+Download Dataset from [COVID-19 Infection Map Generation and Diagnosis from Chest X-Ray Images](https://www.kaggle.com/aysendegerli/qatacov19-dataset)
 
 ```
-  /data
-    /data/Lung Segmentation
-      /data/Lung Segmentation/CXR_Png
-      /data/Lung Segmentation/masks
+  /data/QaTa-COV19
+    /data/QaTa-COV19/QaTa-COV19
+      /data/QaTa-COV19/QaTa-COV19/Images
+      /data/QaTa-COV19/QaTa-COV19/Ground-truths
 ```
 
 ## U-Net: Convolutional Networks for Biomedical Image Segmentation 
@@ -96,3 +96,4 @@ If you are interested in segmentation loss functions much in depth, you will fin
 
 # references
 - [Understanding Dice Loss for Crisp Boundary Detection](https://towardsdatascience.com/understanding-dice-loss-for-crisp-boundary-detection-bb30c2e5f62b)
+- [U-Net_Lung-Segmentation](https://github.com/seungjunlee96/U-Net_Lung-Segmentation)
