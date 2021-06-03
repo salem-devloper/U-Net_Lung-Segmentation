@@ -3,7 +3,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
-from CovidCTDataset import CovidCTDataset
+from QataCovDataset import QataCovDataset
 import argparse
 import logging
 import os
@@ -213,10 +213,10 @@ def get_args():
     parser.add_argument('--n_workers', type =int , default = 0 , help = "The number of workers for dataloader")
 
     # arguments for training
-    parser.add_argument('--img_size', type = int , default = 512)
-    parser.add_argument('--epochs', type=int , default=50)
-    parser.add_argument('--batch_size', type=int, default=8)
-    parser.add_argument('--lr', type=float, default=0.00001)
+    parser.add_argument('--img_size', type = int , default = 224)
+    parser.add_argument('--epochs', type=int , default=100)
+    parser.add_argument('--batch_size', type=int, default=16)
+    parser.add_argument('--lr', type=float, default=0.01)
 
     parser.add_argument('--load_model', type=str, default=None, help='.pth file path to load model')
     return parser.parse_args()
@@ -275,9 +275,9 @@ def main():
     train_split,valid_split = train_test_split(train_split, test_size=0.15, random_state=42)
 
     # set Dataset and DataLoader
-    train_dataset = CovidCTDataset(root_dir = args.path,transforms=train_transforms,split=train_split)
-    val_dataset = CovidCTDataset(root_dir = args.path,split=valid_split,transforms=eval_transforms)
-    test_dataset = CovidCTDataset(root_dir = args.path,split = test_split,transforms=eval_transforms)
+    train_dataset = QataCovDataset(root_dir = args.path,transforms=train_transforms,split=train_split)
+    val_dataset = QataCovDataset(root_dir = args.path,split=valid_split,transforms=eval_transforms)
+    test_dataset = QataCovDataset(root_dir = args.path,split = test_split,transforms=eval_transforms)
 
     from torch.utils.data import DataLoader
     dataloader = {'train' : DataLoader(dataset = train_dataset, batch_size=args.batch_size, num_workers=args.n_workers, shuffle=True),
@@ -299,7 +299,7 @@ def main():
     from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau
     # scheduler = StepLR(optimizer, step_size = 3 , gamma = 0.8)
     ## option 2.
-    scheduler = ReduceLROnPlateau(optimizer, 'min', patience=3)
+    scheduler = ReduceLROnPlateau(optimizer, 'min', patience=3,verbose=True)
 
     # # set criterion
     # if model.n_classes > 1:
