@@ -265,7 +265,7 @@ def main():
     ])
 
     # split data to train_valid_test
-    img_path = os.path.join(args.path,'images')
+    img_path = os.path.join(args.path,'Images')
     img_list = shuffle(os.listdir(img_path),random_state=42)
 
     # ToDo : Removing in the real training
