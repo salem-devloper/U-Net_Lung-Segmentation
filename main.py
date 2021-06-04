@@ -18,6 +18,7 @@ import time
 import copy
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
+import dice_loss
 
 def train_and_validate(net,criterion, optimizer, scheduler, dataloader,device,epochs, load_model = None):
 
@@ -306,7 +307,8 @@ def main():
     #     criterion = nn.CrossEntropyLoss()
     # else:
     #     criterion = nn.BCEWithLogitsLoss()
-    criterion = nn.BCEWithLogitsLoss()
+    #criterion = nn.BCEWithLogitsLoss()
+    criterion = dice_loss.dice_coefficient
 
     train_and_validate(net=model,criterion=criterion,optimizer=optimizer,dataloader=dataloader,device=device,epochs=args.epochs, scheduler=scheduler,load_model=checkpoint_path)
     test(net=model,criterion=criterion,dataloader=dataloader,device=device)
