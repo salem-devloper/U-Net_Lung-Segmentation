@@ -300,7 +300,7 @@ def main():
     from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau
     # scheduler = StepLR(optimizer, step_size = 3 , gamma = 0.8)
     ## option 2.
-    scheduler = ReduceLROnPlateau(optimizer, 'min', patience=3,verbose=True)
+    scheduler = ReduceLROnPlateau(optimizer, 'min', patience=5,verbose=True)
 
     # # set criterion
     # if model.n_classes > 1:
