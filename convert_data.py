@@ -19,7 +19,7 @@ def create_annotation(path):
 
    
     images_path = os.path.join(path,'Images')
-    masks_path = os.path.join(path,'Ground_truths')
+    masks_path = os.path.join(path,'Ground-truths')
     
     images = os.listdir(images_path)
     masks = os.listdir(masks_path)
@@ -44,10 +44,10 @@ def create_annotation(path):
 def create_original_data(path,out):
     
     images_path = os.path.join(path,'Images')
-    masks_path = os.path.join(path,'Ground_truths')
+    masks_path = os.path.join(path,'Ground-truths')
 
     images_out = os.path.join(out,'Images')
-    masks_out = os.path.join(out,'Ground_truths')
+    masks_out = os.path.join(out,'Ground-truths')
     croped_out = os.path.join(out,'original_crop_images')
 
     images = os.listdir(images_path)
@@ -84,7 +84,7 @@ def create_original_data(path,out):
 
 def create_predict_data(path,img_list,out,net,dataloader,device):
 
-    masks_out = os.path.join(out,'predict_Ground_truths')
+    masks_out = os.path.join(out,'predict_Ground-truths')
     croped_out = os.path.join(out,'predict_crop_images')
 
     """Iterate over data"""
@@ -148,8 +148,8 @@ def main():
         print("path created")
         os.mkdir(args.out)
         os.mkdir(os.path.join(args.out,'Images'))
-        os.mkdir(os.path.join(args.out,'Ground_truths'))
-        os.mkdir(os.path.join(args.out,'predict_Ground_truths'))
+        os.mkdir(os.path.join(args.out,'Ground-truths'))
+        os.mkdir(os.path.join(args.out,'predict_Ground-truths'))
         os.mkdir(os.path.join(args.out,'original_crop_images'))
         os.mkdir(os.path.join(args.out,'predict_crop_images'))
     
