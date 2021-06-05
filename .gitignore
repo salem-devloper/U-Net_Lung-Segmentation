@@ -11,3 +11,5 @@ __pycache__/
 /accuracy_plot.png
 /loss_plot.png
 /checkpoint/
+
+/*.png
