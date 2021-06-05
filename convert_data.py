@@ -102,7 +102,9 @@ def create_predict_data(path,img_list,out,net,dataloader,device):
         with torch.set_grad_enabled(False):
             masks_pred = net(imgs)
             pred = torch.sigmoid(masks_pred) > 0.5
-            pred = torch.squeeze(pred,1)
+            print(pred.size())
+            pred = torch.squeeze(pred)
+            print(pred.size())
         
         masks = pred.detach().cpu().numpy().astype(np.uint8)
 
@@ -110,6 +112,7 @@ def create_predict_data(path,img_list,out,net,dataloader,device):
 
     predicted_masks_array = np.concatenate(predicted_masks, axis=0)
 
+    print(predicted_masks_array.shape)
     
     del predicted_masks
     gc.collect()
