@@ -31,9 +31,9 @@ def create_annotation(path):
     covid = pd.DataFrame(columns=['img','target'])
     no_covid = pd.DataFrame(columns=['img','target'])
 
-    covid['images'] = covid_images
+    covid['img'] = covid_images
     covid['target'] = 0
-    no_covid['images'] = no_covid_images
+    no_covid['img'] = no_covid_images
     no_covid['target'] = 1
 
     annotation = pd.concat([covid,no_covid])
@@ -57,7 +57,7 @@ def create_original_data(path,out):
     covid_images =[image for image in images if 'mask_'+image in masks]
     no_covid_images =[image for image in images if 'mask_'+image not in masks]
 
-    
+    print('copy original data')
     for img_file in tqdm(covid_images):
         copyfile(os.path.join(images_path,img_file),
                 os.path.join(images_out,img_file))
@@ -72,7 +72,7 @@ def create_original_data(path,out):
 
         Image.fromarray(croped).save(os.path.join(croped_out,'croped_'+img_file))
 
-
+    
     for img_file in tqdm(no_covid_images):
         copyfile(os.path.join(images_path,img_file),
                 os.path.join(images_out,img_file))
@@ -89,6 +89,8 @@ def create_predict_data(path,img_list,out,net,dataloader,device):
     croped_out = os.path.join(out,'predict_crop_images')
 
     """Iterate over data"""
+
+    print("predict masks and croped images")
 
     predicted_masks=[]
     data_iter = tqdm(enumerate(dataloader), total=len(dataloader))
@@ -161,8 +163,8 @@ def main():
     # set model
     model = UNet(n_channels=1, n_classes=1).to(device)
 
-    #checkpoint = torch.load(args.load_model)
-    #model.load_state_dict(checkpoint['model_state_dict'])
+    checkpoint = torch.load(args.load_model)
+    model.load_state_dict(checkpoint['model_state_dict'])
 
 
     """set img size
@@ -190,7 +192,7 @@ def main():
     
     create_original_data(args.path,args.out)
 
-    #create_predict_data(args.out,model,dataloader,device)
+    create_predict_data(args.out,model,dataloader,device)
 
     df = create_annotation(args.path)
 
