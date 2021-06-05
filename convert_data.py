@@ -83,7 +83,7 @@ def create_original_data(path,out):
         copyfile(os.path.join(images_path,img_file),
                 os.path.join(croped_out,'croped_'+img_file))
 
-def create_predict_data(path,img_list,out,net,dataloader,device):
+def create_predict_data(path,img_list,out,net,dataloader,device,img_size):
 
     masks_out = os.path.join(out,'predict_Ground-truths')
     croped_out = os.path.join(out,'predict_crop_images')
@@ -118,7 +118,7 @@ def create_predict_data(path,img_list,out,net,dataloader,device):
     
 
     for i,img_name in tqdm(enumerate(img_list)):
-        img = Image.open(os.path.join(path,'Images/'+img_name)).convert('L')
+        img = Image.open(os.path.join(path,'Images/'+img_name)).convert('L').resize((img_size,img_size),Image.LANCZOS)
         
         print(np.array(img).shape)
 
@@ -197,7 +197,7 @@ def main():
     
     #create_original_data(args.path,args.out)
 
-    create_predict_data(args.path,img_list,args.out,model,dataloader,device)
+    create_predict_data(args.path,img_list,args.out,model,dataloader,device,args.img_size)
 
     df = create_annotation(args.path)
 
