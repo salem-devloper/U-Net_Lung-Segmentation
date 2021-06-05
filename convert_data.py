@@ -132,7 +132,7 @@ def get_args():
 
     parser.add_argument('--load_model', type=str, default='best_checkpoint.pt', help='.pth file path to load model')
 
-    parser.add_argument('--out', type=str, default='dataset')
+    parser.add_argument('--out', type=str, default='./dataset')
     return parser.parse_args()
 
 
@@ -140,7 +140,8 @@ def main():
 
     args = get_args()
 
-    if not os.path.exists(args.out):
+    if ~ os.path.exists(args.out):
+        print("path created")
         os.mkdir(args.out)
         os.mkdir(os.path.join(args.out,'Images'))
         os.mkdir(os.path.join(args.out,'Ground_truths'))
