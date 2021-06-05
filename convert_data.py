@@ -120,11 +120,11 @@ def create_predict_data(path,img_list,out,net,dataloader,device):
 
         mask = (predicted_masks_array[i]*255).astype(np.uint8)
 
-        Image.fromarray(mask).save(os.path.join(croped_out,'mask_'+img_file))
+        Image.fromarray(mask).save(os.path.join(croped_out,'mask_'+img_name))
 
         croped = np.where(mask == 0, 0, img).astype(np.uint8)
 
-        Image.fromarray(croped).save(os.path.join(croped_out,'croped_'+img_file)) 
+        Image.fromarray(croped).save(os.path.join(croped_out,'croped_'+img_name)) 
 
 
 def get_args():
