@@ -119,22 +119,15 @@ def create_predict_data(path,img_list,out,net,dataloader,device,img_size):
 
     for i,img_name in tqdm(enumerate(img_list)):
 
-        print(Image.open(os.path.join(path,'Images/'+img_name)).convert('L').size)
-        img = np.array(Image.open(os.path.join(path,'Images/'+img_name)).convert('L'))
-
-        img_shape = img.shape
-
-        print(img.shape)
+        img = Image.open(os.path.join(path,'Images/'+img_name)).convert('L')
 
         mask = (predicted_masks_array[i,:,:]*255).astype(np.uint8)
 
-        mask_img = Image.fromarray(mask).resize(img_shape,Image.LANCZOS)
-
-        print(mask_img.size)
+        mask_img = Image.fromarray(mask).resize(img.size,Image.LANCZOS)
 
         mask_img.save(os.path.join(croped_out,'mask_'+img_name))
 
-        croped = np.where(np.array(mask_img) == 0, 0, img).astype(np.uint8)
+        croped = np.where(np.array(mask_img) == 0, 0, np.array(img)).astype(np.uint8)
 
         Image.fromarray(croped).save(os.path.join(croped_out,'croped_'+img_name)) 
 
