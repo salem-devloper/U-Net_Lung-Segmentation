@@ -120,9 +120,7 @@ def create_predict_data(path,img_list,out,net,dataloader,device,img_size):
     for i,img_name in tqdm(enumerate(img_list)):
         img = np.array(Image.open(os.path.join(path,'Images/'+img_name)).convert('L'))
 
-        img_shape = img.shape()
-
-
+        img_shape = img.shape
 
         mask = (predicted_masks_array[i,:,:]*255).astype(np.uint8)
 
