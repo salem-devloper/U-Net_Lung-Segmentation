@@ -11,7 +11,7 @@ from tqdm import tqdm
 from QataCovDataset import QataCovDataset
 import gc
 
-def create_annotation(path)
+def create_annotation(path):
 
    
     images_path = os.path.join(path,'Images')
@@ -155,8 +155,8 @@ def main():
     # set model
     model = UNet(n_channels=1, n_classes=1).to(device)
 
-    checkpoint = torch.load(args.load_model)
-    model.load_state_dict(checkpoint['model_state_dict'])
+    #checkpoint = torch.load(args.load_model)
+    #model.load_state_dict(checkpoint['model_state_dict'])
 
 
     """set img size
