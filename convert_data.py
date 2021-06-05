@@ -118,6 +118,8 @@ def create_predict_data(path,img_list,out,net,dataloader,device,img_size):
     
 
     for i,img_name in tqdm(enumerate(img_list)):
+
+        print(Image.open(os.path.join(path,'Images/'+img_name)).convert('L').size)
         img = np.array(Image.open(os.path.join(path,'Images/'+img_name)).convert('L'))
 
         img_shape = img.shape
