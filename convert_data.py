@@ -124,9 +124,7 @@ def create_predict_data(path,img_list,out,net,dataloader,device,img_size):
 
         mask = (predicted_masks_array[i,:,:]*255).astype(np.uint8)
 
-        mask_img = Image.fromarray(mask)
-
-        mask_img.resize(img_shape,Image.LANCZOS)
+        mask_img = Image.fromarray(mask).resize(img_shape,Image.LANCZOS)
 
         mask_img.save(os.path.join(croped_out,'mask_'+img_name))
 
