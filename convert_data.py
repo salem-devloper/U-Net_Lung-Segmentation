@@ -191,3 +191,7 @@ def main():
 
     df.to_csv(os.path.join(args.out,'target.csv'),index=False)
 
+
+if __name__ == '__main__':
+
+    main()
