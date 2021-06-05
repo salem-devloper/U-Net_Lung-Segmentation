@@ -64,7 +64,7 @@ class QataCovDataset(Dataset): # inherit from torch.utils.data.Dataset
 
         if isinstance(img,torch.Tensor) and isinstance(mask, torch.Tensor):
             assert img.size == mask.size
-        return {'image': sample['iamge'],'mask':sample['mask']}
+        return sample
 
 if __name__ == "__main__":
     """Visualization"""
