@@ -59,9 +59,9 @@ def main():
 
     img_path= args.path
 
-    img = Image.open(img_path).convert('L')
+    img = Image.open(img_path).convert('L').resize((args.img_size, args.img_size), Image.LANCZOS)
 
-    mask = Image.fromarray(np.zeros(args.img_size,dtype=np.uint8))
+    mask = Image.fromarray(np.zeros((args.img_size,args.img_size),dtype=np.uint8))
 
     real_mask_image = Image.open('./mask_covid_1.png').convert('L')
 
