@@ -118,15 +118,21 @@ def create_predict_data(path,img_list,out,net,dataloader,device,img_size):
     
 
     for i,img_name in tqdm(enumerate(img_list)):
-        img = Image.open(os.path.join(path,'Images/'+img_name)).convert('L').resize((img_size,img_size),Image.LANCZOS)
-        
-        print(np.array(img).shape)
+        img = np.array(Image.open(os.path.join(path,'Images/'+img_name)).convert('L'))
+
+        img_shape = img.shape()
+
+
 
         mask = (predicted_masks_array[i,:,:]*255).astype(np.uint8)
 
-        Image.fromarray(mask).save(os.path.join(croped_out,'mask_'+img_name))
+        mask_img = Image.fromarray(mask)
 
-        croped = np.where(mask == 0, 0, np.array(img)).astype(np.uint8)
+        mask_img.resize(img_shape,Image.LANCZOS)
+
+        mask_img.save(os.path.join(croped_out,'mask_'+img_name))
+
+        croped = np.where(np.array(mask_img) == 0, 0, img).astype(np.uint8)
 
         Image.fromarray(croped).save(os.path.join(croped_out,'croped_'+img_name)) 
 
@@ -195,7 +201,7 @@ def main():
     dataset = QataCovDataset(root_dir = args.path,split=img_list,transforms=eval_transforms)
     dataloader = DataLoader(dataset = dataset , batch_size=16)
     
-    #create_original_data(args.path,args.out)
+    create_original_data(args.path,args.out)
 
     create_predict_data(args.path,img_list,args.out,model,dataloader,device,args.img_size)
 
