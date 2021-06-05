@@ -109,6 +109,7 @@ def create_predict_data(path,img_list,out,net,dataloader,device):
         predicted_masks.append(masks)
 
     predicted_masks_array = np.concatenate(predicted_masks, axis=0)
+
     
     del predicted_masks
     gc.collect()
@@ -117,7 +118,7 @@ def create_predict_data(path,img_list,out,net,dataloader,device):
     for i,img_name in tqdm(enumerate(img_list)):
         img = Image.open(os.path.join(path,'Images/'+img_name)).convert('L')
 
-        mask = (predicted_masks[i]*255).astype(np.uint8)
+        mask = (predicted_masks_array[i]*255).astype(np.uint8)
 
         Image.fromarray(mask).save(os.path.join(croped_out,'mask_'+img_file))
 
