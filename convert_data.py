@@ -192,7 +192,7 @@ def main():
     
     create_original_data(args.path,args.out)
 
-    create_predict_data(args.out,model,dataloader,device)
+    create_predict_data(args.path,img_list,args.out,model,dataloader,device)
 
     df = create_annotation(args.path)
 
