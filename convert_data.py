@@ -102,9 +102,9 @@ def create_predict_data(path,img_list,out,net,dataloader,device):
         with torch.set_grad_enabled(False):
             masks_pred = net(imgs)
             pred = torch.sigmoid(masks_pred) > 0.5
-            print(pred.size())
+            #print(pred.size())
             pred = torch.squeeze(pred)
-            print(pred.size())
+            #print(pred.size())
         
         masks = pred.detach().cpu().numpy().astype(np.uint8)
 
@@ -121,7 +121,9 @@ def create_predict_data(path,img_list,out,net,dataloader,device):
     for i,img_name in tqdm(enumerate(img_list)):
         img = Image.open(os.path.join(path,'Images/'+img_name)).convert('L')
 
-        mask = (predicted_masks_array[i]*255).astype(np.uint8)
+        mask = (predicted_masks_array[i,:,:]*255).astype(np.uint8)
+
+        print(mask.shape)
 
         Image.fromarray(mask).save(os.path.join(croped_out,'mask_'+img_name))
 
