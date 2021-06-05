@@ -38,7 +38,7 @@ def create_annotation(path):
 
     annotation = pd.concat([covid,no_covid])
 
-    annotation.reset_index(inplace = True)
+    annotation = annotation.reset_index()
 
     return annotation
 
