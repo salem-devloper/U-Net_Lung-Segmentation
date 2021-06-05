@@ -123,7 +123,11 @@ def main():
     
     plt.show()
 
+    croped_image = np.where(predicted_masks[0][0],img,0)
 
+    plt.imshow(croped_image,cmap='gray')
+
+    plt.show()
 
 if __name__ == '__main__':
 
