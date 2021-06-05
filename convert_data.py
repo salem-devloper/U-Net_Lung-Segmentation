@@ -112,7 +112,6 @@ def create_predict_data(path,img_list,out,net,dataloader,device):
 
     predicted_masks_array = np.concatenate(predicted_masks, axis=0)
 
-    print(predicted_masks_array.shape)
     
     del predicted_masks
     gc.collect()
@@ -123,11 +122,9 @@ def create_predict_data(path,img_list,out,net,dataloader,device):
 
         mask = (predicted_masks_array[i,:,:]*255).astype(np.uint8)
 
-        print(mask.shape)
-
         Image.fromarray(mask).save(os.path.join(croped_out,'mask_'+img_name))
 
-        croped = np.where(mask == 0, 0, img).astype(np.uint8)
+        croped = np.where(mask == 0, 0, np.array(img)).astype(np.uint8)
 
         Image.fromarray(croped).save(os.path.join(croped_out,'croped_'+img_name)) 
 
