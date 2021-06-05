@@ -19,7 +19,7 @@ def create_annotation(path):
 
    
     images_path = os.path.join(path,'Images')
-    masks_path = os.path.join(path,'Ground_truth')
+    masks_path = os.path.join(path,'Ground_truths')
     
     images = os.listdir(images_path)
     masks = os.listdir(masks_path)
