@@ -10,6 +10,8 @@ from tqdm import tqdm
 import argparse
 
 from QataCovDataset import QataCovDataset
+from model.unet import UNet
+
 import gc
 
 def create_annotation(path):
