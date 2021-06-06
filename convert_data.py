@@ -32,9 +32,9 @@ def create_annotation(path):
     no_covid = pd.DataFrame(columns=['img','target'])
 
     covid['img'] = covid_images
-    covid['target'] = 0
+    covid['target'] = 1
     no_covid['img'] = no_covid_images
-    no_covid['target'] = 1
+    no_covid['target'] = 0
 
     annotation = pd.concat([covid,no_covid])
 
@@ -80,8 +80,8 @@ def create_original_data(path,out):
         #copyfile(os.path.join(masks_path,'mask_'+img_file),
         #        os.path.join(masks_out,'maks_'+img_file))
 
-        copyfile(os.path.join(images_path,img_file),
-                os.path.join(croped_out,'croped_'+img_file))
+        #copyfile(os.path.join(images_path,img_file),
+        #        os.path.join(croped_out,'croped_'+img_file))
 
 def create_predict_data(path,img_list,out,net,dataloader,device,img_size):
 
