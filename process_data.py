@@ -22,7 +22,7 @@ def process_image(img,kernels):
 
     footprint = np.array([[1,1,1],[1,1,1],[1,1,1]])
 
-    decode_img = scipy.ndimage.generic_filter(img,convolve,footprint=footprint)
+    decode_img = scipy.ndimage.generic_filter(img.astype(np.uint8),convolve,footprint=footprint)
 
     decode_img = decode_img.reshape(-1)
 
