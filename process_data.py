@@ -14,7 +14,7 @@ from tqdm import tqdm
 from scipy.stats import rankdata
 
 import matplotlib.pyplot as plt
-
+import cv2
 
 def process_image(img,kernels):
 
@@ -22,7 +22,7 @@ def process_image(img,kernels):
 
     footprint = np.array([[1,1,1],[1,1,1],[1,1,1]])
 
-    decode_img = scipy.ndimage.generic_filter(img.astype(np.uint8),convolve,footprint=footprint)
+    decode_img = scipy.ndimage.generic_filter(img,convolve,footprint=footprint)
 
     decode_img = decode_img.reshape(-1)
 
@@ -155,7 +155,9 @@ def gabor_features(img, kernels, d1, d2):
 
     for kernel in kernels:
 
-        filtred_img_complex = scipy.ndimage.convolve(img,kernel)
+        #filtred_img_complex = scipy.ndimage.convolve(img,kernel)
+
+        filtred_img_complex = cv2.filter2D(img,-1,kernel)
 
         filtred_img = np.abs(filtred_img_complex)
 
@@ -197,7 +199,7 @@ def main():
 
     for row in tqdm(df['img'].values):
 
-        img = np.array(Image.open(os.path.join(images_path,'croped_'+row)).convert('L'),dtype=np.complex128)
+        img = np.array(Image.open(os.path.join(images_path,'croped_'+row)).convert('L'))
 
         features = process_image(img,kernels)
 
