@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import cv2
 
 
-def process_image(img):
+def process_image(img,kernels):
 
     # decode image
 
@@ -94,7 +94,10 @@ def process_image(img):
 
     # calculate gabor features
     
-    gabor_img = Gabor_process(img)
+    gabor_features = gabor_features(img,kernels,32,32)
+
+    return np.concatenate([zipf_features, gabor_features])
+
 
 
 
@@ -170,33 +173,61 @@ def gabor_features(img, kernels, d1, d2):
 
     return np.concatenate(features)
 
+def get_args():
 
+    parser = argparse.ArgumentParser(description = "Qata_Covid19 Segmentation" ,
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    # set your environment
+    parser.add_argument('--path',type=str,default='./data/Qata_COV')
+    # arguments for training
+    parser.add_argument('--img_size', type = int , default = 224)
+
+    parser.add_argument('--out', type=str, default='./dataset')
+    return parser.parse_args()
 
 def main():
 
-    img = np.random.randint(0,256,(224,224),dtype=np.uint8)
+    args = get_args()
 
-    footprint = np.array([[1,1,1],[1,1,1],[1,1,1]])
+    images_path = os.path.join(args.path,'predict_crop_images')
 
-    plt.imshow(img)
+    df = pd.read_scv(os.path.join(args.path,'target.csv'))
 
-    print(res)
+    kernels = gabor_kernels(5,8,39,39)
 
-    plt.show()
+    data = []
+
+    for row in tqdm(df['img'].values):
+
+        img = np.array(Image.open(os.path.join(images_path,'croped_'+row)).convert('L'))
+
+        features = process_image(img,kernels)
+
+        data.append(np.expand_dims(features,axis=0))
+
+
+    np_data = np.concatenate(data)
+
+    feature_df = pd.DataFrame(data)
+
+    final_df = pd.concat([df,feature_df],axis=1)
+    
+    final_df.to_csv(os.path.join(args.out,'data.csv'),index=False)
 
 
 if __name__ == '__main__':
 
-    #main()
+    main()
 
-    img = np.random.randint(0,256,(224,224),dtype=np.uint8)
+    #img = np.random.randint(0,256,(224,224),dtype=np.uint8)
 
-    plt.imshow(img)
+    #plt.imshow(img)
 
-    kernels = gabor_kernels(5,8,39,39)
+    #kernels = gabor_kernels(5,8,39,39)
 
-    features = gabor_features(img,kernels,32,32)
+    #features = gabor_features(img,kernels,32,32)
 
-    print(features)
+    #print(features)
 
-    plt.show()
+    #plt.show()
