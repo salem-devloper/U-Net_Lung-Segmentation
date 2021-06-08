@@ -22,7 +22,11 @@ def process_image(img,kernels):
 
     footprint = np.array([[1,1,1],[1,1,1],[1,1,1]])
 
+    print('salam')
+
     decode_img = scipy.ndimage.generic_filter(img,convolve,footprint=footprint)
+
+    print('salam1')
 
     decode_img = decode_img.reshape(-1)
 
@@ -95,12 +99,11 @@ def process_image(img,kernels):
 
     # calculate gabor features
     
+    print("salam2")
     gabor_features_data = gabor_features(img,kernels,32,32)
+    print("salam3")
 
     return np.concatenate([zipf_features, gabor_features_data])
-
-
-
 
 
     
