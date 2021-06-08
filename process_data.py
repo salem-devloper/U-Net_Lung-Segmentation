@@ -208,7 +208,7 @@ def main():
 
         features = process_image(img,kernels)
 
-        data.append(features,axis=0)
+        data.append(features)
 
 
     np_data = np.concatenate(data)
