@@ -8,11 +8,12 @@ from PIL import Image
 import scipy
 #from skimage.filters import gabor_kernel
 import math
+import argparse
+from tqdm import tqdm
 
 from scipy.stats import rankdata
 
 import matplotlib.pyplot as plt
-import cv2
 
 
 def process_image(img,kernels):
