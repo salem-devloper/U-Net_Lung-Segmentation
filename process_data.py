@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-
+import os
 import scipy
 
 import numpy as np
 from PIL import Image
 
-import scipy
 #from skimage.filters import gabor_kernel
 import math
 import argparse
