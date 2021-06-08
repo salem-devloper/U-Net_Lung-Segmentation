@@ -196,7 +196,7 @@ def main():
 
     images_path = os.path.join(args.path,'predict_crop_images')
 
-    df = pd.read_csv(os.path.join(args.path,'target.csv'),,nrows=10)
+    df = pd.read_csv(os.path.join(args.path,'target.csv'),nrows=10)
 
     kernels = gabor_kernels(5,8,39,39)
 
